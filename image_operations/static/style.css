@@ -17,6 +17,12 @@ p {
   color: #333333;
 }
 
+
+.image {
+  height:50vh;
+  margin: 0;
+  padding: 0;
+}
 .header {
   position:relative;
   text-align:center;
@@ -25,7 +31,7 @@ p {
 } 
 
 .inner-header {
-  height:65vh;
+  height:5vh;
   width:100%;
   margin: 0;
   padding: 0;

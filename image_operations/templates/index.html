@@ -5,16 +5,24 @@
     <title></title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+    <title>Image Operations</title>
 </head>
 
 <body>
     <div class="header">
         <!--Content before waves-->
         <div class="inner-header flex">
-            
-
 
         </div>
+        
+        <img class="image" src="{{url_for('static', filename='cached_img.jpg')}}" />
+
+        <h1>Upload new File</h1>
+        <form method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </form>
+
         <!--Waves Container-->
         <div>
             <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -1,3 +1,10 @@
+
+# python
 *.ipynb
 __pycache__/*
 tests/*
+
+# app
+image_operations/static/*.jpg
+image_operations/static/*.png
+image_operations/static/*.jpeg
