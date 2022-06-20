@@ -9,7 +9,6 @@ from image_operations import app
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
-
 @app.route('/resize', methods=['GET', 'POST'])
 def resize():
     url = request.args.get('img_url', default=0)
@@ -29,9 +28,11 @@ def resize():
 
     return render_template('resize.html')
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -44,10 +45,10 @@ def index():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        
-        if file and allowed_file(file.filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
-            return render_template('index.html')
-        
-    return render_template('index.html')
 
+        if file and allowed_file(file.filename):
+            file.save(os.path.join(
+                app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
+            return render_template('index.html')
+
+    return render_template('index.html')
