@@ -1,7 +1,7 @@
 import os
 import requests
 from PIL import Image
-from flask import render_template, request, Flask, redirect, flash, url_for
+from flask import render_template, request, redirect, flash, url_for
 from .operations import resize_img
 
 from image_operations import app
@@ -24,7 +24,7 @@ def resize():
 
     img = Image.open(response.raw)
     resized_img = resize_img(img=img, factor=factor, method=method)
-    resized_img.save('image_operations/static/img_cache.jpg')
+    resized_img.save('image_operations/static/cached_img.jpg')
 
     return render_template('resize.html')
 
@@ -49,6 +49,6 @@ def index():
         if file and allowed_file(file.filename):
             file.save(os.path.join(
                 app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
-            return render_template('index.html')
+            return render_template('index.html', filename='cached_img.jpg')
 
-    return render_template('index.html')
+    return render_template('index.html', filename='logo_nb.png')

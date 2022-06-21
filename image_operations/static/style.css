@@ -17,9 +17,9 @@ p {
   color: #333333;
 }
 
-
 .image {
   height:50vh;
+  max-width: 200vh;
   margin: 0;
   padding: 0;
 }
@@ -29,6 +29,11 @@ p {
   background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
   color:white;
 } 
+
+.button {
+  background: linear-gradient(60deg, rgba(0, 172, 193, 1) 0%, rgba(84, 58, 183, 1) 100%);
+  font-size: x-large;
+}
 
 .inner-header {
   height:5vh;
