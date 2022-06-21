@@ -1,10 +1,12 @@
 import os
+
 import requests
+from flask import flash, redirect, render_template, request
 from PIL import Image
-from flask import render_template, request, redirect, flash, url_for
-from .operations import resize_img
 
 from image_operations import app
+
+from .operations import resize_img
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -30,8 +32,7 @@ def resize():
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,8 +48,7 @@ def index():
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
-            file.save(os.path.join(
-                app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
             return render_template('index.html', filename='cached_img.jpg')
 
     return render_template('index.html', filename='logo_nb.png')
