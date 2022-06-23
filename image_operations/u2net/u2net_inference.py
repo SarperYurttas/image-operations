@@ -1,10 +1,8 @@
 import os
 
 # import torch.optim as optim
-import numpy as np
 import torch
 from PIL import Image
-from skimage import io
 from torch.autograd import Variable
 
 from .data_loader import image_loader

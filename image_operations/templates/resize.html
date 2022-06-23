@@ -7,11 +7,19 @@
     {% endif %}
     <div class="operations">
         <form method="post" action="/resize">
-            <p class="factor-label"><strong>Factor:</strong>
-            </p>
+            <p class="resize-label"><strong>Factor:</strong>
                 <input class="factor-input" type="text" value=" " name="textbox" />
+            </p>
+            <p class="resize-label"><strong>Method: </strong>
+                <select class="select" name="methods">
+                    <option value="nearest">nearest</option>
+                    <option value="bilinear">bilinear</option>
+                    <option value="bicubic">bicubic</option>
+                    <option value="lanczos">lanczos</option>
+                </select>
+            </p>
             <br>
-            <input class="button" type="submit" value="Resize" name="button1" />
+              <input id="resize-button" class="button" type="submit" value="Resize" name="button1" />
         </form>
     </div>
 {% endblock body %}

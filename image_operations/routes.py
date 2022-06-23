@@ -1,8 +1,6 @@
 import os
 
-import requests
-from flask import redirect, render_template, request, url_for
-from PIL import Image
+from flask import redirect, render_template, request
 
 from image_operations import app
 
@@ -52,6 +50,7 @@ def result():
 def resize():
     if context.data is None:
         return redirect('/')
+
     if request.method == 'POST':
         if request.form.get('textbox') == ' ':
             context.error(msg='Enter resize factor', logo=False)
@@ -59,12 +58,14 @@ def resize():
 
         elif request.form.get('textbox').strip().isnumeric():
             factor = int(request.form.get('textbox'))
+            method = request.form.get('methods')
             context.data['error'] = None
+
             if factor > 4:
                 context.error(msg='Factor is too high', logo=False)
                 return render_template('resize.html', context=context.data)
 
-            resize_img(context.data['img_path'], factor=factor, method='bilinear')
+            resize_img(context.data['img_path'], factor=factor, method=method)
             context.data['img_name'] = 'cached_img_resized.png'
             return redirect('/result')
 
@@ -79,9 +80,9 @@ def resize():
 def menu():
     if context.data is None:
         return redirect('/')
+
     if request.method == 'POST':
         if request.form.get('button1') == 'Remove Background':
-
             remove_background(context.data['img_path'])
             context.data['img_name'] = 'cached_img_bgremoved.png'
             return redirect('/result')
@@ -95,6 +96,7 @@ def menu():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     context.reset()
+
     if request.method == 'POST':
         if 'file' not in request.files:
             context.error('Choose file first!')

@@ -1,10 +1,9 @@
-# data loader
 from __future__ import division, print_function
 
 import numpy as np
 import torch
 from skimage import color, io, transform
-from torchvision import transforms  # , utils
+from torchvision import transforms
 
 
 class RescaleT(object):
