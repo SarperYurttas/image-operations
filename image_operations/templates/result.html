@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    {% if context.error %}
+        <p class="error"><strong>Error:</strong> {{ context.error }}
+    {% endif %}
+    <br><br>
+    <div class="operations">
+        <a class="button" role="button" href="{{url_for('static', filename=context.img_name)}}"
+            download={{url_for('static', filename=context.img_name)}}><i class="fa fa-download"></i> Download Image
+        </a>
+        <br><br>
+        <a class="button" role="button" href="/">Try Again</a>
+    </div>
+{% endblock body %}

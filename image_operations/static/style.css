@@ -32,6 +32,10 @@ p {
 
 .form {
   width: 500px;
+  border: 2px solid black;
+  border-radius: 4px;
+  background: linear-gradient(60deg, rgba(83, 58, 183, 0.507) 0%, rgba(0, 171, 193, 0.500) 100%);
+
 }
 
 .button {
@@ -49,7 +53,7 @@ p {
 
 .button:hover {
   border: 1px solid white;
-
+  color: white;
 }
 
 .error {
@@ -69,14 +73,18 @@ p {
   border-radius: 20px;
   width: 100px;
   height: 40px;
-  background-color: #333333;
+  border: 1px solid black;
+  background-color: white;
+  box-shadow: -3px 6px 17px -1px rgba(0,0,0,0.56);
+  -webkit-box-shadow: -3px 6px 17px -1px rgba(0,0,0,0.56);
+  -moz-box-shadow: -3px 6px 17px -1px rgba(0,0,0,0.56);
 }
 
 .factor-input:hover {
-  border: 1px solid;
-  border-color: white;
-  background-color: #4d4d4d;
+  border: 2px solid black;
+  background-color: whitesmoke;
 }
+
 .factor-label {
   color: black;
   font-size: xx-large;
@@ -88,6 +96,15 @@ p {
   width:100%;
   margin: 0;
   padding: 0;
+}
+
+footer {
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: -10px;
+  padding: 3px;
+  color: white;
 }
 
 .flex { /*Flexbox for containers*/
