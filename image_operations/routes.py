@@ -9,70 +9,72 @@ from image_operations import app
 from .operations import resize_img, remove_bg
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+CONTEXT = {
+    'error': None,
+    'img_name': 'logo_nb.png',
+    'isFile': False
+}
 
 
-@app.route('/resize', methods=['GET', 'POST'])
-def resize():
-    """Deprecated
-    """
-    url = request.args.get('img_url', default=0)
-    factor = int(request.args.get('factor', default=2))
-    method = request.args.get('method', default='bilinear')
+class Context(object): # Singleton class
+    _instance = None
 
-    if url == 0:
-        return 'failed'
-
-    response = requests.get(url=url, stream=True)
-    if response.status_code > 200:
-        return f'failed, status_code = {response.status_code}'
-
-    img = Image.open(response.raw)
-    resized_img = resize_img(img=img, factor=factor, method=method)
-    resized_img.save('image_operations/static/cached_img.jpg')
-
-    return render_template('resize.html')
-
-
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Context, cls).__new__(cls)
+        return cls._instance
+    
+    def error(self, msg='Unknown error!'):
+        self.data['error'] = msg
+        self.data['img_name'] = 'logo_nb.png'
+    
+    def reset(self):
+        self.data = {
+        'error': None,
+        'img_name': 'logo_nb.png',
+        'isFile': False
+        }
+    
+context = Context()
+    
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-context = {
-    'error': None,
-    'img_name': 'logo_nb.png',
-    'op_mode': False
-}
+@app.route('/menu', methods=['GET', 'POST'])
+def menu():
+    app.logger.info(CONTEXT)
+    if request.method == 'POST':
+        if request.form.get('button1') == 'Remove Background':
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.jpg')
+            remove_bg(image_path)
+            CONTEXT['img_name'] = 'cached_img_bgremoved.png'
+            return render_template('menu.html', context=context.data)
+
+        elif request.form.get('button2') == 'Resize':
+            # TO DO
+            app.logger.info('second_button pressed')
+            
+    return render_template('menu.html', context=context.data)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    context.reset()
     if request.method == 'POST':
-        if context['op_mode']:
-            context['error'] = None
-            if request.form.get('button1') == 'Remove Background':
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.jpg')
-                remove_bg(image_path)
-                context['img_name'] = 'cached_img_bgremoved.png'
-                return render_template('index.html', context=context)
-            
-            elif request.form.get('button2') == 'Resize':
-                # TO DO
-                app.logger.info('second_button pressed')
-        else:                
-            if 'file' not in request.files:
-                context['error'] = 'Choose file first'
-                return render_template('index.html', context=context)
+        if 'file' not in request.files:
+            context.error('Choose file first!')
+            return render_template('index.html', context=context.data)
 
-            file = request.files['file']
-            if file.filename == '':
-                context['error'] = 'Choose file first'
-                return render_template('index.html', context=context)
+        file = request.files['file']
+        if file.filename == '':
+            context.error('Choose file first!')
+            return render_template('index.html', context=context.data)
 
-            if file and allowed_file(file.filename):
-                context['error'] = None
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
-                context['img_name'] = 'cached_img.jpg'
-                context['op_mode'] = True
-                return render_template('index.html', context=context)
+        if file and allowed_file(file.filename):
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.jpg'))
+            context.data['img_name'] = 'cached_img.jpg'
+            context.data['isFile'] = True
+            return redirect('/menu')
 
-            
-    return render_template('index.html', context=context)
+    return render_template('index.html', context=context.data)
