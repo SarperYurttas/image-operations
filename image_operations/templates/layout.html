@@ -16,8 +16,10 @@
         <div class="inner-header flex">
         </div>
         <img class="image" src="{{url_for('static', filename=context.img_name)}}" />
-        {% block body %}
-        {% endblock body %}
+        <div style="align-items: center;">
+            {% block body %}
+            {% endblock body %}
+        </div>
         <!--Waves Container-->
         <div>
             <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

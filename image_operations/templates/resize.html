@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    {% if context.error %}
+        <p class="error"><strong>Error:</strong> {{ context.error }}
+    {% endif %}
+    <div class="operations">
+        <form method="post" action="/resize">
+            <p class="factor-label"><strong>Factor:</strong>
+            </p>
+                <input class="factor-input" type="text" value=" " name="textbox" />
+            <br>
+            <input class="button" type="submit" value="Resize" name="button1" />
+        </form>
+    </div>
+{% endblock body %}

@@ -1,13 +1,13 @@
 import os
-from skimage import io
-import torch
-from torch.autograd import Variable
+
 # import torch.optim as optim
 import numpy as np
-
+import torch
 from PIL import Image
-from .data_loader import image_loader
+from skimage import io
+from torch.autograd import Variable
 
+from .data_loader import image_loader
 from .model import U2NETP  # small version u2net 4.7 MB
 
 
@@ -16,7 +16,7 @@ def normPRED(d):
     ma = torch.max(d)
     mi = torch.min(d)
 
-    dn = (d-mi)/(ma-mi)
+    dn = (d - mi) / (ma - mi)
 
     return dn
 
@@ -41,7 +41,7 @@ def save_output(image_name, pred):
 
     cutout = naive_cutout(image, mask)
 
-    cutout.save(img_name+'_bgremoved.png', format='png')
+    cutout.save(img_name + '_bgremoved.png', format='png')
 
 
 def remove_background(image_path: str):
@@ -77,4 +77,4 @@ def remove_background(image_path: str):
 
 
 if __name__ == "__main__":
-    remove_background(image_name = 'boat.jpg')
+    remove_background(image_name='boat.jpg')

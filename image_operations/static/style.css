@@ -58,6 +58,30 @@ p {
   color: black;
 }
 
+.factor-input {
+  align-items: center;
+  text-align: center;
+  font-size: large;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-display: bold;
+  border: 1px solid;
+  margin-top: -20px;
+  border-radius: 20px;
+  width: 100px;
+  height: 40px;
+  background-color: #333333;
+}
+
+.factor-input:hover {
+  border: 1px solid;
+  border-color: white;
+  background-color: #4d4d4d;
+}
+.factor-label {
+  color: black;
+  font-size: xx-large;
+  font-display: bold;
+}
 
 .inner-header {
   height:5vh;
