@@ -1,3 +1,7 @@
 import warnings
+
 warnings.filterwarnings("ignore")
-from image_operations import app
+from image_operations.routes import app
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
