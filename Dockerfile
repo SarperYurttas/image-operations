@@ -8,11 +8,12 @@ RUN apt-get update && \
 
 ENV CONDA_DIR /opt/conda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh -O ~/miniconda.sh && \
-     /bin/bash ~/miniconda.sh -b -p /opt/conda
+    /bin/bash ~/miniconda.sh -b -p /opt/conda
 ENV PATH=$CONDA_DIR/bin:$PATH
 
 COPY . /app
 WORKDIR /app
 
 RUN pip install -r requirements.txt
-ENTRYPOINT python run.py
+
+ENTRYPOINT gunicorn -w 4 --bind 0.0.0.0:8080 run:app

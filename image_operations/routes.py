@@ -9,7 +9,9 @@ from .operations import remove_background, resize_img
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-app.secret_key = 'gizli_sifre'
+app.secret_key = (
+    '38445692bc5490389a60c9d7254008c31c662162b7071de6b93c90c87b8aef1e'  # secrets.token_hex()
+)
 
 
 def raise_error(msg='Unknown error!', logo=True):
@@ -24,7 +26,9 @@ def allowed_file(filename):
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
-    if session['context']['img_name'] == 'io_logo.png':
+    if 'context' not in session:
+        return redirect('/')
+    elif not session['context']['is_file']:
         return redirect('/')
 
     return render_template('result.html', context=session['context'])
@@ -32,7 +36,9 @@ def result():
 
 @app.route('/resize', methods=['GET', 'POST'])
 def resize():
-    if session['context']['img_name'] == 'io_logo.png':
+    if 'context' not in session:
+        return redirect('/')
+    elif not session['context']['is_file']:
         return redirect('/')
 
     if request.method == 'POST':
@@ -62,7 +68,9 @@ def resize():
 
 @app.route('/menu', methods=['GET', 'POST'])
 def menu():
-    if session['context']['img_name'] == 'io_logo.png':
+    if 'context' not in session:
+        return redirect('/')
+    elif not session['context']['is_file']:
         return redirect('/')
 
     if request.method == 'POST':
@@ -81,12 +89,12 @@ def menu():
 def index():
     context = {
         'error': None,
-        'is_file_uploaded': False,
         'img_name': 'io_logo.png',
+        'is_file': False,
         'img_path': os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.png'),
     }
     session['context'] = context
-    # app.logger.info(secrets.token_hex())
+
     if request.method == 'POST':
         if 'file' not in request.files:
             raise_error('Choose file first!')
@@ -100,7 +108,7 @@ def index():
         if file and allowed_file(file.filename):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.png'))
             session['context']['img_name'] = 'cached_img.png'
-            session['context']['is_file_uploaded'] = 'cached_img.png'
+            session['context']['is_file'] = True
             return redirect('/menu')
 
     return render_template('index.html', context=session['context'])
