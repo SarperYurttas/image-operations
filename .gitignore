@@ -8,6 +8,7 @@ __pycache__/
 
 # app
 image_operations/static/cached_img*.*
+image_operations/static/ci_*.*
 
 # Distribution / packaging
 .Python

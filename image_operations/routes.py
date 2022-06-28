@@ -9,12 +9,10 @@ from .operations import remove_background, resize_img
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-app.secret_key = (
-    '38445692bc5490389a60c9d7254008c31c662162b7071de6b93c90c87b8aef1e'  # secrets.token_hex()
-)
+app.secret_key = 'very_secret_key'.encode('utf8')  # there is no secrets in my codes
 
 
-def raise_error(msg='Unknown error!', logo=True):
+def raise_error(msg='Unknown error!', logo=True) -> None:
     session['context']['error'] = msg
     if logo:
         session['context']['img_name'] = 'io_logo.png'
@@ -24,6 +22,18 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def clean_cache() -> None:
+    cache = [
+        img
+        for img in os.listdir(app.config['UPLOAD_FOLDER'])
+        if img.startswith('ci_') and img != session['context']['img_name']
+    ]
+    app.logger.info(cache)
+    if len(cache) > 10:
+        for ci in cache:
+            os.remove(app.config['UPLOAD_FOLDER'] + ci)
+
+
 @app.route('/result', methods=['GET', 'POST'])
 def result():
     if 'context' not in session:
@@ -31,6 +41,7 @@ def result():
     elif not session['context']['is_file']:
         return redirect('/')
 
+    clean_cache()
     return render_template('result.html', context=session['context'])
 
 
@@ -56,7 +67,6 @@ def resize():
                 return render_template('resize.html', context=session['context'])
 
             resize_img(session['context']['img_path'], factor=factor, method=method)
-            session['context']['img_name'] = 'cached_img_resized.png'
             return redirect('/result')
 
         else:
@@ -76,7 +86,6 @@ def menu():
     if request.method == 'POST':
         if request.form.get('button1') == 'Remove Background':
             remove_background(session['context']['img_path'])
-            session['context']['img_name'] = 'cached_img_bgremoved.png'
             return redirect('/result')
 
         elif request.form.get('button2') == 'Resize':
@@ -87,11 +96,12 @@ def menu():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    img_num = secrets.token_hex(4)
     context = {
         'error': None,
         'img_name': 'io_logo.png',
         'is_file': False,
-        'img_path': os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.png'),
+        'img_path': os.path.join(app.config['UPLOAD_FOLDER'], f'ci_{img_num}.png'),
     }
     session['context'] = context
 
@@ -106,8 +116,8 @@ def index():
             return render_template('index.html', context=session['context'])
 
         if file and allowed_file(file.filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'cached_img.png'))
-            session['context']['img_name'] = 'cached_img.png'
+            file.save(session['context']['img_path'])
+            session['context']['img_name'] = session['context']['img_path'].split('/')[-1]
             session['context']['is_file'] = True
             return redirect('/menu')
 

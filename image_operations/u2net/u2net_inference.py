@@ -25,21 +25,20 @@ def naive_cutout(img, mask):
     return cutout
 
 
-def save_output(image_name, pred):
-    img_name = image_name.split('.')[0]
+def save_output(image_path, pred):
 
     predict = pred
     predict = predict.squeeze()
     predict_np = predict.cpu().data.numpy()
 
-    image = Image.open(image_name)
+    image = Image.open(image_path)
 
     mask = Image.fromarray((predict_np * 255).astype("uint8"), mode="L")
     mask = mask.resize(image.size, Image.LANCZOS)
 
     cutout = naive_cutout(image, mask)
 
-    cutout.save(img_name + '_bgremoved.png', format='png')
+    cutout.save(image_path, format='png')
 
 
 def remove_background(image_path: str):
@@ -69,10 +68,10 @@ def remove_background(image_path: str):
     pred = d1[:, 0, :, :]
     pred = normPRED(pred)
 
-    save_output(image_name=image_path, pred=pred)
+    save_output(image_path=image_path, pred=pred)
 
     del d1, d2, d3, d4, d5, d6, d7
 
 
 if __name__ == "__main__":
-    remove_background(image_name='boat.jpg')
+    remove_background(image_path='boat.jpg')

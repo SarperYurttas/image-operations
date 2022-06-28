@@ -6,3 +6,4 @@ tests/*
 
 # app
 image_operations/static/cached_img*.*
+image_operations/static/ci_*.*

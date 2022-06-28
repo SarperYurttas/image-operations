@@ -11,9 +11,12 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linu
     /bin/bash ~/miniconda.sh -b -p /opt/conda
 ENV PATH=$CONDA_DIR/bin:$PATH
 
+COPY ./requirements.txt requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . /app
 WORKDIR /app
 
-RUN pip install -r requirements.txt
 
 ENTRYPOINT gunicorn -w 4 --bind 0.0.0.0:8080 run:app
