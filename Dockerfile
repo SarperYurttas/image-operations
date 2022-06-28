@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04
+FROM python:3.9-slim
+
 
 RUN apt-get update && \
     apt-get install -y build-essential  && \
@@ -6,10 +7,6 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV CONDA_DIR /opt/conda
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -p /opt/conda
-ENV PATH=$CONDA_DIR/bin:$PATH
 
 COPY ./requirements.txt requirements.txt
 

@@ -28,7 +28,6 @@ def clean_cache() -> None:
         for img in os.listdir(app.config['UPLOAD_FOLDER'])
         if img.startswith('ci_') and img != session['context']['img_name']
     ]
-    app.logger.info(cache)
     if len(cache) > 10:
         for ci in cache:
             os.remove(app.config['UPLOAD_FOLDER'] + ci)
