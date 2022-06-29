@@ -1,3 +1,4 @@
+import gc
 import os
 
 # import torch.optim as optim
@@ -41,6 +42,7 @@ def save_output(image_path, pred):
     cutout.save(image_path, format='png')
 
 
+@torch.inference_mode()
 def remove_background(image_path: str):
     model_dir = os.path.join(os.getcwd(), 'image_operations/u2net/models/u2netp.pth')
 
@@ -61,8 +63,8 @@ def remove_background(image_path: str):
         inputs_test = Variable(inputs_test.cuda())
     else:
         inputs_test = Variable(inputs_test)
-    with torch.inference_mode():
-        d1, d2, d3, d4, d5, d6, d7 = net(inputs_test)
+
+    d1, d2, d3, d4, d5, d6, d7 = net(inputs_test)
 
     # normalization
     pred = d1[:, 0, :, :]
@@ -70,7 +72,8 @@ def remove_background(image_path: str):
 
     save_output(image_path=image_path, pred=pred)
 
-    del d1, d2, d3, d4, d5, d6, d7
+    del d1, d2, d3, d4, d5, d6, d7, pred, net, inputs_test
+    torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":
