@@ -1,4 +1,3 @@
-import gc
 import os
 
 # import torch.optim as optim
@@ -9,6 +8,8 @@ from torch.autograd import Variable
 from .data_loader import image_loader
 from .model import U2NETP  # small version u2net 4.7 MB
 
+
+GPU_INFERENCE = False
 
 # normalize the predicted SOD probability map
 def normPRED(d):
@@ -48,21 +49,17 @@ def remove_background(image_path: str):
 
     net = U2NETP(3, 1)
 
-    if torch.cuda.is_available():
+    inputs_test = image_loader(image_path)
+    inputs_test = inputs_test.type(torch.FloatTensor)
+
+    if torch.cuda.is_available() and GPU_INFERENCE:
         net.load_state_dict(torch.load(model_dir))
+        inputs_test = Variable(inputs_test.cuda())
         net.cuda()
     else:
         net.load_state_dict(torch.load(model_dir, map_location='cpu'))
-    net.eval()
-
-    inputs_test = image_loader(image_path)
-
-    inputs_test = inputs_test.type(torch.FloatTensor)
-
-    if torch.cuda.is_available():
-        inputs_test = Variable(inputs_test.cuda())
-    else:
         inputs_test = Variable(inputs_test)
+    net.eval()
 
     d1, d2, d3, d4, d5, d6, d7 = net(inputs_test)
 
@@ -73,7 +70,8 @@ def remove_background(image_path: str):
     save_output(image_path=image_path, pred=pred)
 
     del d1, d2, d3, d4, d5, d6, d7, pred, net, inputs_test
-    torch.cuda.empty_cache()
+    if torch.cuda.is_available() and GPU_INFERENCE:
+        torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":

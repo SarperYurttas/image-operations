@@ -5,5 +5,5 @@ requests
 Pillow
 scikit-image
 gunicorn
-torch==1.11.0
-torchvision==0.12.0
+torch==1.12.0
+torchvision==0.13.0
