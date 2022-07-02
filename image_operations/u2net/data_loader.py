@@ -1,8 +1,8 @@
 from __future__ import division, print_function
 
+import cv2
 import numpy as np
 import torch
-import cv2
 from torchvision import transforms
 
 
@@ -11,8 +11,9 @@ class RescaleT(object):
         self.output_size = output_size
 
     def __call__(self, image):
-        img = cv2.resize(image, (self.output_size, self.output_size),
-                         interpolation=cv2.INTER_LINEAR)
+        img = cv2.resize(
+            image, (self.output_size, self.output_size), interpolation=cv2.INTER_LINEAR
+        )
         return img
 
 

@@ -1,17 +1,15 @@
 import os
 
-# import torch.optim as optim
 import torch
 from PIL import Image
 from torch.autograd import Variable
 
 from .data_loader import image_loader
-from .model import U2NETP  # small version u2net 4.7 MB
-
+from .model import U2NET_lite
 
 GPU_INFERENCE = False
 
-# normalize the predicted SOD probability map
+
 def normPRED(d):
     ma = torch.max(d)
     mi = torch.min(d)
@@ -47,7 +45,7 @@ def save_output(image_path, pred):
 def remove_background(image_path: str):
     model_dir = os.path.join(os.getcwd(), 'image_operations/u2net/models/u2netp.pth')
 
-    net = U2NETP(3, 1)
+    net = U2NET_lite()
 
     inputs_test = image_loader(image_path)
     inputs_test = inputs_test.type(torch.FloatTensor)
