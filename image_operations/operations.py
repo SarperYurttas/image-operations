@@ -3,7 +3,7 @@ from PIL import Image
 from .u2net import remove_background
 
 
-def resize_img(img_path, factor, method):
+def resize_img(img_path, scale_factor, method):
     img = Image.open(img_path)
 
     methods = {
@@ -12,7 +12,7 @@ def resize_img(img_path, factor, method):
         'nearest': Image.NEAREST,
         'lanczos': Image.LANCZOS,
     }
-    newsize = (img.width * factor, img.height * factor)
+    newsize = (img.width * scale_factor, img.height * scale_factor)
     resized_img = img.resize(newsize, methods.get(method))
 
     resized_img.save(img_path, format='png')

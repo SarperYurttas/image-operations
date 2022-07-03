@@ -53,23 +53,23 @@ def resize():
 
     if request.method == 'POST':
         if request.form.get('textbox') == ' ':
-            raise_error(msg='Enter resize factor', logo=False)
+            raise_error(msg='Enter resize scale factor', logo=False)
             return render_template('resize.html', context=session['context'])
 
         elif request.form.get('textbox').strip().isnumeric():
-            factor = int(request.form.get('textbox'))
+            scale_factor = int(request.form.get('textbox'))
             method = request.form.get('methods')
             session['context']['error'] = None
 
-            if factor > 4:
-                raise_error(msg='Factor is too high (max: 4)', logo=False)
+            if scale_factor > 4:
+                raise_error(msg='Scale factor is too high (max: 4)', logo=False)
                 return render_template('resize.html', context=session['context'])
 
-            resize_img(session['context']['img_path'], factor=factor, method=method)
+            resize_img(session['context']['img_path'], scale_factor=scale_factor, method=method)
             return redirect('/result')
 
         else:
-            raise_error(msg='Factor must be numeric', logo=False)
+            raise_error(msg='Scale factor must be numeric', logo=False)
             return render_template('resize.html', context=session['context'])
 
     return render_template('resize.html', context=session['context'])
@@ -95,12 +95,12 @@ def menu():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    img_num = secrets.token_hex(4)
+    img_id = secrets.token_hex(4)
     context = {
         'error': None,
         'img_name': 'io_logo.png',
         'is_file': False,
-        'img_path': os.path.join(app.config['UPLOAD_FOLDER'], f'ci_{img_num}.png'),
+        'img_path': os.path.join(app.config['UPLOAD_FOLDER'], f'ci_{img_id}.png'),
     }
     session['context'] = context
 
